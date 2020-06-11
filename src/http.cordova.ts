@@ -1,11 +1,15 @@
 import { HTTP } from '@ionic-native/http';
-import { collect } from './isomorphic-git/src/utils/collect';
+import { collect } from 'isomorphic-git/src/utils/collect';
 
 export interface GitProgressEvent {
   phase: string;
   loaded: number;
   total: number;
 }
+
+export type HttpMethods =
+  'GET' | 'POST' | 'PUT' | 'PATCH' | 'HEAD' | 'DELETE' | 'OPTIONS' | 'UPLOAD' | 'DOWNLOAD' |
+  'get' | 'post' | 'put' | 'patch' | 'head' | 'delete' | 'options' | 'upload' | 'download';
 
 export type ProgressCallback = (progress: GitProgressEvent) => void | Promise<void>;
 
@@ -68,8 +72,7 @@ export type GitHttpResponse = {
 };
 
 interface GitHttpRequestEx extends GitHttpRequest {
-  method: "GET" | "POST" | "PUT" | "PATCH" | "HEAD" | "DELETE" | "OPTIONS" | "UPLOAD" | "DOWNLOAD" |
-          "get" | "post" | "put" | "patch" | "head" | "delete" | "options" | "upload" | "download";
+  method: HttpMethods;
   timeout?: number;
 }
 
@@ -85,7 +88,7 @@ export async function request({
   if (body) {
     body = await collect(body)
   }
-  method = method.toLowerCase() as any;
+  method = method.toLowerCase() as HttpMethods;
   const opts: any = {
     method, headers, timeout,
     data: body,
